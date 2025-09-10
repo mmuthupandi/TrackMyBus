@@ -47,6 +47,17 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        transit: {
+          primary: "hsl(var(--transit-primary))",
+          success: "hsl(var(--transit-success))",
+          warning: "hsl(var(--transit-warning))",
+          danger: "hsl(var(--transit-danger))",
+        },
+        status: {
+          online: "hsl(var(--status-online))",
+          delayed: "hsl(var(--status-delayed))",
+          offline: "hsl(var(--status-offline))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -80,10 +91,49 @@ export default {
             height: "0",
           },
         },
+        "pulse-ring": {
+          "0%": {
+            transform: "scale(0.8)",
+            opacity: "1",
+          },
+          "100%": {
+            transform: "scale(2.4)",
+            opacity: "0",
+          },
+        },
+        "bounce-in": {
+          "0%": {
+            transform: "scale(0.3)",
+            opacity: "0",
+          },
+          "50%": {
+            transform: "scale(1.05)",
+          },
+          "70%": {
+            transform: "scale(0.9)",
+          },
+          "100%": {
+            transform: "scale(1)",
+            opacity: "1",
+          },
+        },
+        "slide-up": {
+          "0%": {
+            transform: "translateY(100%)",
+            opacity: "0",
+          },
+          "100%": {
+            transform: "translateY(0)",
+            opacity: "1",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-ring": "pulse-ring var(--pulse-duration) cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite",
+        "bounce-in": "bounce-in 0.6s ease-out",
+        "slide-up": "slide-up 0.3s ease-out",
       },
     },
   },
