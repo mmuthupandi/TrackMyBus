@@ -131,151 +131,94 @@ const BusTracker = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+      {/* Mobile-Optimized Header */}
+      <div className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center space-x-3">
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-transit-primary to-transit-success">
                 <Bus className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">CityTransit</h1>
-                <p className="text-sm text-muted-foreground">Live Bus Tracking</p>
+                <h1 className="text-lg font-bold text-foreground">CityTransit</h1>
+                <p className="text-xs text-muted-foreground">Live Bus Tracking</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Button 
-                variant={activeView === 'map' ? 'default' : 'outline'} 
-                size="sm"
-                onClick={() => setActiveView('map')}
-              >
-                <MapPin className="w-4 h-4 mr-2" />
-                Map
-              </Button>
-              <Button 
-                variant={activeView === 'list' ? 'default' : 'outline'} 
-                size="sm"
-                onClick={() => setActiveView('list')}
-              >
-                <Navigation className="w-4 h-4 mr-2" />
-                List
-              </Button>
-            </div>
+          </div>
+          
+          {/* Mobile Tab Navigation */}
+          <div className="flex bg-secondary rounded-lg p-1">
+            <Button 
+              variant={activeView === 'map' ? 'default' : 'ghost'} 
+              size="sm"
+              className="flex-1 h-8"
+              onClick={() => setActiveView('map')}
+            >
+              <MapPin className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Map</span>
+            </Button>
+            <Button 
+              variant={activeView === 'list' ? 'default' : 'ghost'} 
+              size="sm"
+              className="flex-1 h-8"
+              onClick={() => setActiveView('list')}
+            >
+              <Navigation className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">List</span>
+            </Button>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-6">
-        {/* Search Bar */}
-        <div className="mb-6">
+      <div className="px-4 pb-4">
+        {/* Mobile Search Bar */}
+        <div className="mb-4">
           <div className="relative">
             <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
             <Input
               placeholder="Search routes, destinations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-card border-border"
+              className="pl-10 h-12 bg-card border-border text-base"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Map/List View */}
-          <div className="lg:col-span-2">
-            {activeView === 'map' ? (
-              <Card className="h-[500px] bg-card border-border">
-                <CardContent className="p-0 h-full">
-                  <div className="h-full bg-muted rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <MapPin className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-                      <h3 className="text-lg font-medium text-foreground mb-2">Interactive Map</h3>
-                      <p className="text-muted-foreground mb-4">
-                        To enable live bus tracking on the map, you'll need to integrate with a mapping service.
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Recommended: Mapbox for real-time vehicle tracking
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="space-y-4">
-                {filteredBuses.map((bus) => (
-                  <Card key={bus.id} className="bg-card border-border hover:border-primary transition-colors animate-bounce-in">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="relative">
-                            <div className={`w-12 h-12 rounded-full bg-${getStatusColor(bus.status)} flex items-center justify-center`}>
-                              <Bus className="w-6 h-6 text-white" />
-                            </div>
-                            {bus.status === 'online' && (
-                              <div className="absolute -top-1 -right-1 w-4 h-4 bg-status-online rounded-full animate-pulse-ring"></div>
-                            )}
-                          </div>
-                          
-                          <div>
-                            <div className="flex items-center space-x-2 mb-1">
-                              <Badge variant="secondary" className="bg-primary text-primary-foreground">
-                                Route {bus.routeNumber}
-                              </Badge>
-                              {bus.status === 'online' ? (
-                                <Wifi className="w-4 h-4 text-status-online" />
-                              ) : (
-                                <WifiOff className="w-4 h-4 text-status-offline" />
-                              )}
-                            </div>
-                            <p className="font-medium text-foreground">{bus.destination}</p>
-                            <p className="text-sm text-muted-foreground">
-                              Currently at: {bus.currentStop} → {bus.nextStop}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="text-right">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <Clock className="w-4 h-4 text-muted-foreground" />
-                            <span className="font-bold text-lg text-foreground">{bus.arrivalTime}</span>
-                          </div>
-                          {bus.delay > 0 && (
-                            <Badge variant="destructive" className="bg-status-delayed text-white">
-                              +{bus.delay} min delay
-                            </Badge>
-                          )}
-                          <div className="mt-2">
-                            <Badge 
-                              variant="outline" 
-                              className={`border-${getOccupancyColor(bus.occupancy)} text-${getOccupancyColor(bus.occupancy)}`}
-                            >
-                              {bus.occupancy} occupancy
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Bus Stop Info Sidebar */}
+        {/* Mobile-Optimized Content */}
+        {activeView === 'map' ? (
           <div className="space-y-4">
+            {/* Map View */}
+            <Card className="h-[40vh] bg-card border-border">
+              <CardContent className="p-0 h-full">
+                <div className="h-full bg-muted rounded-lg flex items-center justify-center">
+                  <div className="text-center p-6">
+                    <MapPin className="w-12 h-12 mx-auto mb-3 text-muted-foreground" />
+                    <h3 className="text-base font-medium text-foreground mb-2">Interactive Map</h3>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Live bus tracking map coming soon
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Tap to integrate Mapbox
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Quick Stop Info - Mobile */}
             <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2 text-foreground">
-                  <MapPin className="w-5 h-5" />
-                  <span>Central Station</span>
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center space-x-2 text-base text-foreground">
+                  <MapPin className="w-4 h-4" />
+                  <span>Nearest Stop: Central Station</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                {mockStops[0].arrivals.map((arrival, index) => (
+              <CardContent className="space-y-3 pt-0">
+                {mockStops[0].arrivals.slice(0, 2).map((arrival, index) => (
                   <div key={index} className="flex items-center justify-between p-3 bg-secondary rounded-lg">
-                    <div>
+                    <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
-                        <Badge variant="outline" className="border-primary text-primary">
+                        <Badge variant="outline" className="border-primary text-primary text-xs">
                           {arrival.routeNumber}
                         </Badge>
                         {arrival.delay > 0 && (
@@ -284,40 +227,104 @@ const BusTracker = () => {
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm font-medium text-foreground">{arrival.destination}</p>
+                      <p className="text-sm font-medium text-foreground truncate">{arrival.destination}</p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right ml-2">
                       <p className="font-bold text-foreground">{arrival.estimatedTime}</p>
                     </div>
                   </div>
                 ))}
               </CardContent>
             </Card>
-
-            {/* System Status */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="text-foreground">System Status</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Active Buses</span>
-                    <span className="font-bold text-status-online">{buses.filter(b => b.status === 'online').length}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Delayed</span>
-                    <span className="font-bold text-status-delayed">{buses.filter(b => b.status === 'delayed').length}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Last Update</span>
-                    <span className="text-sm text-muted-foreground">30s ago</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
-        </div>
+        ) : (
+          /* Mobile Bus List */
+          <div className="space-y-3">
+            {filteredBuses.map((bus) => (
+              <Card key={bus.id} className="bg-card border-border hover:border-primary transition-colors animate-bounce-in">
+                <CardContent className="p-4">
+                  {/* Mobile Bus Card Layout */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center space-x-3 flex-1 min-w-0">
+                      <div className="relative flex-shrink-0">
+                        <div className={`w-10 h-10 rounded-full bg-${getStatusColor(bus.status)} flex items-center justify-center`}>
+                          <Bus className="w-5 h-5 text-white" />
+                        </div>
+                        {bus.status === 'online' && (
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-status-online rounded-full animate-pulse-ring"></div>
+                        )}
+                      </div>
+                      
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center space-x-2 mb-1 flex-wrap">
+                          <Badge variant="secondary" className="bg-primary text-primary-foreground text-xs">
+                            Route {bus.routeNumber}
+                          </Badge>
+                          {bus.status === 'online' ? (
+                            <Wifi className="w-3 h-3 text-status-online flex-shrink-0" />
+                          ) : (
+                            <WifiOff className="w-3 h-3 text-status-offline flex-shrink-0" />
+                          )}
+                        </div>
+                        <p className="font-medium text-sm text-foreground truncate">{bus.destination}</p>
+                      </div>
+                    </div>
+
+                    <div className="text-right flex-shrink-0 ml-3">
+                      <div className="flex items-center justify-end space-x-1 mb-1">
+                        <Clock className="w-3 h-3 text-muted-foreground" />
+                        <span className="font-bold text-lg text-foreground">{bus.arrivalTime}</span>
+                      </div>
+                      {bus.delay > 0 && (
+                        <Badge variant="destructive" className="bg-status-delayed text-white text-xs">
+                          +{bus.delay}m
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Mobile: Current Location */}
+                  <div className="text-xs text-muted-foreground mb-2 flex items-center">
+                    <span className="truncate">At: {bus.currentStop} → {bus.nextStop}</span>
+                  </div>
+                  
+                  {/* Mobile: Occupancy */}
+                  <div className="flex justify-between items-center">
+                    <Badge 
+                      variant="outline" 
+                      className={`border-${getOccupancyColor(bus.occupancy)} text-${getOccupancyColor(bus.occupancy)} text-xs`}
+                    >
+                      {bus.occupancy} occupancy
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+        
+        {/* Mobile System Status - Bottom */}
+        <Card className="mt-6 bg-card border-border">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base text-foreground">System Status</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <div className="text-lg font-bold text-status-online">{buses.filter(b => b.status === 'online').length}</div>
+                <div className="text-xs text-muted-foreground">Online</div>
+              </div>
+              <div>
+                <div className="text-lg font-bold text-status-delayed">{buses.filter(b => b.status === 'delayed').length}</div>
+                <div className="text-xs text-muted-foreground">Delayed</div>
+              </div>
+              <div>
+                <div className="text-lg font-bold text-muted-foreground">30s</div>
+                <div className="text-xs text-muted-foreground">Last Update</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
